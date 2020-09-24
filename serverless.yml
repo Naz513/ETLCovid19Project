@@ -158,8 +158,8 @@ resources:
         DatabaseName:
           Ref: CrawlerDatabase
         Configuration: '{"Version":1.0,"Grouping":{"TableGroupingPolicy":"CombineCompatibleSchemas"}}'
-        # Schedule:
-        #   ScheduleExpression: cron(30 12 * * ? *)
+        Schedule:
+          ScheduleExpression: cron(30 12 * * ? *)
         Role:
           Ref: CrawlerRole
         Targets:
