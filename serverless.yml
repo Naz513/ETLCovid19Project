@@ -1,0 +1,171 @@
+service: etl
+
+plugins:
+  - serverless-python-requirements
+  - serverless-pseudo-parameters
+
+custom:
+  pythonRequirements:
+    dockerizePip: non-linux
+  AWSGlueCrawlerName: crawler-${self:service}-${opt:stage, self:provider.stage}
+
+provider:
+  name: aws
+  runtime: python3.8
+  region: us-east-1
+  stage: dev
+  memorySize: 256
+  timeout: 180
+  environment:
+    TABLE_NAME: ${self:service}-covid-cases-${opt:stage, self:provider.stage}
+    PROCESS_STATUS_TABLE: ${self:service}-process-status-${opt:stage, self:provider.stage}
+    BUCKET_NAME: ${self:service}-data-bucket-${opt:stage, self:provider.stage}
+    SNSTOPIC_NAME: arn:aws:sns:${self:provider.region}:#{AWS::AccountId}:${self:service}-${opt:stage, self:provider.stage}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - "dynamodb:PutItem"
+        - "dynamodb:GetItem"
+        - "dynamodb:UpdateItem"
+      Resource: "arn:aws:dynamodb:${self:provider.region}:#{AWS::AccountId}:table/${self:provider.environment.PROCESS_STATUS_TABLE}"
+    - Effect: Allow
+      Action:
+        - "s3:PutObject"
+        - "s3:GetObject"
+        - "sns:Publish"
+        - "dynamodb:PutItem"
+        - "dynamodb:GetItem"
+        - "dynamodb:UpdateItem"
+        - "s3:DeleteObject"
+      Resource:
+        - "arn:aws:dynamodb:${self:provider.region}:#{AWS::AccountId}:table/${self:provider.environment.TABLE_NAME}"
+        - "arn:aws:s3:::${self:provider.environment.BUCKET_NAME}/*"
+        - "arn:aws:s3:::${self:provider.environment.BUCKET_NAME}"
+        - "arn:aws:sns:${self:provider.region}:#{AWS::AccountId}:${self:service}-${opt:stage, self:provider.stage}"
+
+functions:
+  getDataFunction:
+    handler: getData.handler
+    events:
+      - schedule:
+          name: ${self:service}-${opt:stage, self:provider.stage}-Cron-Job
+          description: Covid ETL cron job Runs everyday at 12:15PM
+          rate: cron(15 12 * * ? *)
+
+resources:
+  Resources:
+    SNSTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: ${self:service}-${opt:stage, self:provider.stage}
+        DisplayName: Covid ETL Update
+
+    SNSSubscription:
+      DependsOn: SNSTopic
+      Type: AWS::SNS::Subscription
+      Properties:
+        TopicArn:
+          Ref: SNSTopic
+        Protocol: email
+        Endpoint: nsaquib96@gmail.com
+
+    S3DataBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:provider.environment.BUCKET_NAME}
+        AccessControl: Private
+        VersioningConfiguration:
+          Status: Enabled
+        BucketEncryption:
+          ServerSideEncryptionConfiguration:
+            - ServerSideEncryptionByDefault:
+                SSEAlgorithm: AES256
+        PublicAccessBlockConfiguration:
+          BlockPublicAcls: true
+          BlockPublicPolicy: true
+          IgnorePublicAcls: true
+          RestrictPublicBuckets: true
+
+    ProcessStatusTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.PROCESS_STATUS_TABLE}
+        AttributeDefinitions:
+          - AttributeName: Status
+            AttributeType: S
+        KeySchema:
+          - AttributeName: Status
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+    DynamoDbTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.TABLE_NAME}
+        AttributeDefinitions:
+          - AttributeName: Date
+            AttributeType: S
+        KeySchema:
+          - AttributeName: Date
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+    CrawlerRole:
+      Type: AWS::IAM::Role
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: "Allow"
+              Principal:
+                Service:
+                  - "glue.amazonaws.com"
+              Action:
+                - "sts:AssumeRole"
+        Path: "/"
+        ManagedPolicyArns:
+          - arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole
+        Policies:
+          - PolicyName: ${self:custom.AWSGlueCrawlerName}-policy
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - "s3:GetObject"
+                    - "s3:PutObject"
+                  Resource:
+                    - "arn:aws:s3:::${self:provider.environment.BUCKET_NAME}/data*"
+
+    CrawlerDatabase:
+      Type: AWS::Glue::Database
+      Properties:
+        CatalogId:
+          Ref: AWS::AccountId
+        DatabaseInput:
+          Description: AWS Glue Database for Crawler | Covid ETL Project
+          Name: ${self:custom.AWSGlueCrawlerName}-database
+
+    Crawler:
+      Type: AWS::Glue::Crawler
+      Properties:
+        Name: ${self:custom.AWSGlueCrawlerName}
+        Description: AWS Glue Crawler for Covid Data ETL Job
+        DatabaseName:
+          Ref: CrawlerDatabase
+        Configuration: '{"Version":1.0,"Grouping":{"TableGroupingPolicy":"CombineCompatibleSchemas"}}'
+        # Schedule:
+        #   ScheduleExpression: cron(30 12 * * ? *)
+        Role:
+          Ref: CrawlerRole
+        Targets:
+          S3Targets:
+            - Path: s3://${self:service}-data-bucket-${opt:stage, self:provider.stage}/data
+
+package:
+  exclude:
+    - venv/**
