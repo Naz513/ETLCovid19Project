@@ -1,14 +1,17 @@
 import unittest
-from getData import getData
+import pandas as pd
+import os.path
+
+
+from functions.extract_data import getData
 from functions.transform_data import transformNewYorkTimesData
 from functions.transform_data import transformJohnHopkinsData
 from functions.transform_data import transformJoinData
 
-import os.path
 
 my_path = os.path.abspath(os.path.dirname(__file__))
-nytTestDataPath = os.path.join(my_path, "test/NYT-test-data.csv")
-jhpTestDataPath = os.path.join(my_path, "test/JPH-test-data.csv")
+nytTestDataPath = os.path.join(my_path, "test_files/NYT-test-data.csv")
+jhpTestDataPath = os.path.join(my_path, "test_files/JPH-test-data.csv")
 
 class TestCalc(unittest.TestCase):
     
