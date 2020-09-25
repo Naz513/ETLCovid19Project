@@ -6,6 +6,7 @@ import re
 import pandas as pd
 from io import StringIO
 
+s3_client = boto3.client('s3')
 
 def SNSmessage(message):
     sns_client = boto3.client('sns')
@@ -21,8 +22,6 @@ def s3Save(bucket, key):
     newBucket = bucket
     newKey = 'data/processedData.csv'
 
-    s3_client = boto3.client('s3')
-
     csv_file = s3_client.get_object(Bucket=oldBucket, Key=oldKey)
     body = csv_file['Body']
     csv_body = body.read().decode('utf-8')
@@ -33,12 +32,6 @@ def s3Save(bucket, key):
     updated_headers.to_csv(csv_buffer, header=True, index=False)
     s3_client.put_object(Bucket = newBucket, Key = newKey, Body = csv_buffer.getvalue())
     return "DONE"
-
-
-def s3Delete(bucket, key):
-    s3_client = boto3.client('s3')
-    s3_client.delete_object(Bucket = bucket, Key = key)
-
 
 def ProcessStatus(status):
     processStatusDb = boto3.resource('dynamodb')
@@ -91,14 +84,13 @@ def load():
         for row in validation_reader:
             try:
                 datetime = row[0]
-                Cases = int(row[1])
-                Deaths = int(row[2])
-                Recovered = int(row[3])
+                Cases = int(float(row[1]))
+                Deaths = int(float(row[2]))
+                Recovered = int(float(row[3]))
 
                 r = re.compile('.{4}-.{2}-.{2}')
                 if len(datetime) == 10 and r.match(datetime):
                     counter = counter + 1
-                    print(f"row = {counter}")
                 else:
                     message = f"Date Field failed to match the format \n{type(datetime)} {datetime}"
                     SNSmessage(message)
@@ -108,7 +100,6 @@ def load():
 
                 if Cases >= 0:
                     counter = counter + 1
-                    print(f"row = {counter}")
                 else:
                     message = f"Cases Field failed to match the format \n{type(Cases)} {Cases}"
                     SNSmessage(message)
@@ -118,7 +109,6 @@ def load():
 
                 if Deaths >= 0:
                     counter = counter + 1
-                    print(f"row = {counter}")
                 else:
                     message = f"Deaths Field failed to match the format \n{type(Deaths)} {Deaths}"
                     SNSmessage(message)
@@ -128,7 +118,6 @@ def load():
 
                 if Recovered >= 0:
                     counter = counter + 1
-                    print(f"row = {counter}")
                 else:
                     message = f"Recovered Field failed to match the format \n{type(Recovered)} {Recovered}"
                     SNSmessage(message)
@@ -168,10 +157,12 @@ def load():
             updated_rows = lines - existing
 
             ProcessStatus(False)
-            savedStatus = s3Save(bucket, key)
-            if savedStatus == 'DONE':
-                print("Object Saved to New Destination...")
-                s3Delete(bucket, key)
+            fileSaved = s3Save(bucket, key)
+            if fileSaved == "DONE":
+                print("File was saved...")
+                s3_client.delete_object(Bucket = bucket, Key = key)
+            else:
+                print("File did not save!")
 
             if updated_rows > 0:
                 message = f"Message: Number of Lines Updated: {updated_rows}"

@@ -15,7 +15,7 @@ provider:
   region: us-east-1
   stage: dev
   memorySize: 256
-  timeout: 180
+  timeout: 300
   environment:
     TABLE_NAME: ${self:service}-covid-cases-${opt:stage, self:provider.stage}
     PROCESS_STATUS_TABLE: ${self:service}-process-status-${opt:stage, self:provider.stage}
