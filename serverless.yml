@@ -44,8 +44,8 @@ provider:
         - "arn:aws:sns:${self:provider.region}:#{AWS::AccountId}:${self:service}-${opt:stage, self:provider.stage}"
 
 functions:
-  getDataFunction:
-    handler: getData.handler
+  indexFunction:
+    handler: index.handler
     events:
       - schedule:
           name: ${self:service}-${opt:stage, self:provider.stage}-Cron-Job

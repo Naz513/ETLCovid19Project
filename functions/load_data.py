@@ -93,6 +93,7 @@ def load():
                     counter = counter + 1
                 else:
                     message = f"Date Field failed to match the format \n{type(datetime)} {datetime}"
+                    print(message)
                     SNSmessage(message)
                     failed = True
                     ProcessStatus(True)
@@ -102,6 +103,7 @@ def load():
                     counter = counter + 1
                 else:
                     message = f"Cases Field failed to match the format \n{type(Cases)} {Cases}"
+                    print(message)
                     SNSmessage(message)
                     failed = True
                     ProcessStatus(True)
@@ -111,6 +113,7 @@ def load():
                     counter = counter + 1
                 else:
                     message = f"Deaths Field failed to match the format \n{type(Deaths)} {Deaths}"
+                    print(message)
                     SNSmessage(message)
                     failed = True
                     ProcessStatus(True)
@@ -120,6 +123,7 @@ def load():
                     counter = counter + 1
                 else:
                     message = f"Recovered Field failed to match the format \n{type(Recovered)} {Recovered}"
+                    print(message)
                     SNSmessage(message)
                     failed = True
                     ProcessStatus(True)
@@ -166,11 +170,13 @@ def load():
 
             if updated_rows > 0:
                 message = f"Message: Number of Lines Updated: {updated_rows}"
+                print(message)
                 SNSmessage(message)
                 return ("DONE")
 
             else:
                 message = "Message: There weren't any rows updated"
+                print(message)
                 SNSmessage(message)
                 return ("DONE")
 
