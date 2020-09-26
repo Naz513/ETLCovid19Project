@@ -11,7 +11,7 @@ Automate an ETL processing pipeline for COVID-19 daat using Python and AWS Cloud
 
 The following image displays the entire architecture developed using THE SERVERLESS FRAMEWORK
 
-![Architecture](Assets/InfrastructureDiagram.png)
+![Architecture](Assets/InfrastructureDiagram_720.png)
 
 ## Services :truck:
 The following AWS Services are used for this project:
