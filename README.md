@@ -13,6 +13,13 @@ The following image displays the entire architecture developed using THE SERVERL
 
 ![Architecture](Assets/InfrastructureDiagram_720.png)
 
+## Tech Stack Used :construction_worker:
+The following tech stacks were used:
+1. Python
+1. AWS
+1. The Serverless Framework
+1. Github
+
 ## Services :truck:
 The following AWS Services are used for this project:
 1. S3 Bucket
