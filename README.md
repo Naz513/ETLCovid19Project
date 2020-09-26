@@ -44,6 +44,9 @@ Depending on the result of the process, a notification will be sent out to all t
 ![SNS_EMAIL](Assets/SNS_Email.png)
 
 ## QuickSight Dashboard :trophy:
+Dashboard developed using Quicksight and Data retrived from Athena
+
+![QuickSight Dashboard](Assets/Dashboard.png)
 
 ## Blog Link! :book:
 
