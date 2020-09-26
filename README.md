@@ -1,10 +1,10 @@
-# #CloudGuruChallenge - Event-Driven Python on AWS
+# #CloudGuruChallenge - Event-Driven Python on AWS :cloud:
 AWS Challenge by A Cloud Guru
 
-## Challenge Link 
+## Challenge Link :link:
 [Cloud Guru Challenge](https://acloudguru.com/blog/engineering/cloudguruchallenge-python-aws-etl)
 
-## Challenge Goal
+## Challenge Goal :goal_net:
 Automate an ETL processing pipeline for COVID-19 daat using Python and AWS Cloud Services
 
 ## Project Architecture :wrench:
@@ -13,7 +13,7 @@ The following image displays the entire architecture developed using THE SERVERL
 
 ![Architecture](Assets/InfrastructureDiagram_720.png)
 
-## Tech Stack Used :construction_worker:
+## Tech Stack :construction_worker:
 The following tech stacks were used:
 1. Python
 1. AWS
