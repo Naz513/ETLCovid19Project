@@ -1,6 +1,9 @@
 # #CloudGuruChallenge - Event-Driven Python on AWS
 AWS Challenge by A Cloud Guru
 
+## Challenge Link 
+[Cloud Guru Challenge](https://acloudguru.com/blog/engineering/cloudguruchallenge-python-aws-etl)
+
 ## Challenge Goal
 Automate an ETL processing pipeline for COVID-19 daat using Python and AWS Cloud Services
 
@@ -11,7 +14,7 @@ The following image displays the entire architecture developed using THE SERVERL
 ![Architecture](Assets/InfrastructureDiagram.png)
 
 ## Services :truck:
-The following AWS Services will be created:
+The following AWS Services are used for this project:
 1. S3 Bucket
 1. Glue Crawler
 1. Glue Database
@@ -28,13 +31,9 @@ Used Python's built-in module, Unittest, to perform some simple tests, to ensure
 
 ![Test](Assets/test_screenshot.png)
 
-## How to Use? :clipboard:
+## QuickSight Dashboard :trophy:
 
-### Prerequisites :book:
-
-### Steps! :rocket:
-
-# Blog Post! :book:
+## Blog Link! :book:
 
 #### Got Questions? :question:
 Feel free to email me at *nsaquib96@gmail.com*
