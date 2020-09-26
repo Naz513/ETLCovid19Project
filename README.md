@@ -38,6 +38,11 @@ Used Python's built-in module, Unittest, to perform some simple tests, to ensure
 
 ![Test](Assets/test_screenshot.png)
 
+## SNS Email :email:
+Depending on the result of the process, a notification will be sent out to all the subscribers through AWS SNS
+
+![SNS_EMAIL](Assets/SNS_Email.png)
+
 ## QuickSight Dashboard :trophy:
 
 ## Blog Link! :book:
