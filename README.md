@@ -8,7 +8,7 @@ Automate an ETL processing pipeline for COVID-19 daat using Python and AWS Cloud
 
 The following image displays the entire architecture developed using THE SERVERLESS FRAMEWORK
 
-![Architecture](Assets/InfrastructureDiagram_720.png)
+![Architecture](Assets/InfrastructureDiagram.png)
 
 ## Services :truck:
 The following AWS Services will be created:
@@ -24,7 +24,7 @@ The following AWS Services will be created:
 1. SNS Topic
 
 ## Tests :hammer_and_wrench:
-Used Python's built in module, Unittest, to perform some simple tests, to ensure that the code can handle unexpected situations and subsitute invalid data.
+Used Python's built-in module, Unittest, to perform some simple tests, to ensure that the code can handle unexpected situations and subsitute invalid data.
 
 ![Test](Assets/test_screenshot.png)
 
