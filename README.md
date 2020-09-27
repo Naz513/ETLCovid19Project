@@ -5,7 +5,7 @@ AWS Challenge by A Cloud Guru
 [Cloud Guru Challenge](https://acloudguru.com/blog/engineering/cloudguruchallenge-python-aws-etl)
 
 ## Challenge Goal :goal_net:
-Automate an ETL processing pipeline for COVID-19 daat using Python and AWS Cloud Services
+Automate an ETL processing pipeline for COVID-19 data using Python and AWS Cloud Services
 
 ## Project Architecture :wrench:
 
