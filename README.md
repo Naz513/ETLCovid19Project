@@ -49,11 +49,7 @@ Dashboard developed using Quicksight and Data retrived from Athena
 ![QuickSight Dashboard](Assets/Dashboard.png)
 
 ## Blog Link! :book:
-<<<<<<< HEAD
-Blog Post: [Blog About this Project](https://mohdsaquib.hashnode.dev/event-driven-covid-19-data-etl-process-acloudguruchallenge)
-=======
 https://mohdsaquib.hashnode.dev/event-driven-covid-19-data-etl-process-acloudguruchallenge
 
->>>>>>> 15aa706644bcb1ca8ba2e39a55c7004eed7413a8
 #### Got Questions? :question:
 Feel free to email me at *nsaquib96@gmail.com*
